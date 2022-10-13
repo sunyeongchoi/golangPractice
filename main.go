@@ -6,22 +6,22 @@ import (
 	"time"
 )
 
-// Go channel - Unbuffered Channels
+// Go channel - Buffered Channels
 func Calculate(c chan int) {
 	value := rand.Intn(10)
 	fmt.Println("Calculated Random Value: {}", value)
 	time.Sleep(1000 * time.Millisecond)
 	c <- value
-	fmt.Println("Only Executes after another goroutine performs a receive on the channel")
+	fmt.Println("This executes regardless as the send is now non-blocking")
 }
 func main() {
 	fmt.Println("Go Channel Tutorial")
-	values := make(chan int)
-	defer close(values)
+	valueChannel := make(chan int, 2)
+	defer close(valueChannel)
 
-	go Calculate(values)
-	go Calculate(values)
+	go Calculate(valueChannel)
+	go Calculate(valueChannel)
 
-	value := <-values
-	fmt.Println(value)
+	values := <-valueChannel
+	fmt.Println(values)
 }
