@@ -19,6 +19,10 @@ func main() {
 	go compute(10)
 	go compute(10)
 
+	go func() {
+		fmt.Println("Executing my Concurrent anonymous function")
+	}()
+
 	// we scan fmt for input and print that to our console
 	// main function completed before our asynchronous functions could execute and as such, any goroutines that have yet to complete are promptly terminated.
 	// our program waits for keyboard input before it kills off our poor goroutines
