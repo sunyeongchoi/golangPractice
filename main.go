@@ -2,26 +2,23 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
 	"time"
 )
 
-// Go channel - Buffered Channels
-func Calculate(c chan int) {
-	value := rand.Intn(10)
-	fmt.Println("Calculated Random Value: {}", value)
-	time.Sleep(1000 * time.Millisecond)
-	c <- value
-	fmt.Println("This executes regardless as the send is now non-blocking")
+// Goroutine
+func compute(value int) {
+	for i := 0; i < value; i++ {
+		time.Sleep(time.Second)
+		fmt.Println(i)
+	}
 }
 func main() {
-	fmt.Println("Go Channel Tutorial")
-	valueChannel := make(chan int, 2)
-	defer close(valueChannel)
+	fmt.Println("Goroutine Tutorial")
+	// sequential execution of our compute function
+	compute(10)
+	compute(10)
 
-	go Calculate(valueChannel)
-	go Calculate(valueChannel)
-
-	values := <-valueChannel
-	fmt.Println(values)
+	// we scan fmt for input and print that to our console
+	var input string
+	fmt.Scanln(&input)
 }
