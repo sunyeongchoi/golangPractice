@@ -2,45 +2,27 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
-	"sync"
 )
 
-// WaitGroups
+// panic
 
-var urls = []string{
-	"https://google.com",
-	"https://tutorialedge.net",
-	"https://twitter.com",
+func sillySusan() {
+	fmt.Println("silly susan called")
+	panicKingPeter()
+	fmt.Println("silly susan finished")
 }
 
-func fetch(url string, wg *sync.WaitGroup) {
-	defer wg.Done()
-	response, err := http.Get(url)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(response.Status)
+func panicKingPeter() {
+	defer func() {
+		fmt.Println("defer")
+	}()
+	fmt.Println("panicking peter called")
+	// It checks to see if there is anything deferred within panickingPeter and executes these deferred statements.
+	// It then terminates.
+	panic("oh no")
+	fmt.Println("panicking peter finished")
 }
-
-func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Home page endpoint hit")
-	var wg sync.WaitGroup
-	for _, url := range urls {
-		wg.Add(1)
-		go fetch(url, &wg)
-	}
-	wg.Wait()
-	fmt.Println("Returning Response")
-	fmt.Fprintf(w, "Responses")
-}
-
-func handleRequest() {
-	http.HandleFunc("/", homePage)
-	log.Fatal(http.ListenAndServe(":8080", nil))
-}
-
 func main() {
-	handleRequest()
+	fmt.Println("cascading panics")
+	sillySusan()
 }
