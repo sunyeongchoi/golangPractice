@@ -5,27 +5,16 @@ import (
 	"time"
 )
 
-// Goroutine
-func compute(value int) {
-	for i := 0; i < value; i++ {
-		time.Sleep(time.Second)
-		fmt.Println(i)
-	}
+// WaitGroups
+
+func myFunc() {
+	time.Sleep(1 * time.Second)
+	fmt.Println("Inside my goroutine")
 }
+
+// myFunc 고루틴 함수가 실행될 기회를 주지 않고 main 함수가 종료된다.
 func main() {
-	fmt.Println("Goroutine Tutorial")
-	// notice how we've added the 'go' keyword
-	// in front of both our compute function calls
-	go compute(10)
-	go compute(10)
-
-	go func() {
-		fmt.Println("Executing my Concurrent anonymous function")
-	}()
-
-	// we scan fmt for input and print that to our console
-	// main function completed before our asynchronous functions could execute and as such, any goroutines that have yet to complete are promptly terminated.
-	// our program waits for keyboard input before it kills off our poor goroutines
-	var input string
-	fmt.Scanln(&input)
+	fmt.Println("Hello World")
+	go myFunc()
+	fmt.Println("Finish Execution")
 }
