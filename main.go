@@ -2,19 +2,26 @@ package main
 
 import (
 	"fmt"
+	"sync"
 	"time"
 )
 
 // WaitGroups
 
-func myFunc() {
+func myFunc(wg *sync.WaitGroup) {
 	time.Sleep(1 * time.Second)
 	fmt.Println("Inside my goroutine")
+	// signal the end of its' execution
+	wg.Done()
 }
 
-// myFunc 고루틴 함수가 실행될 기회를 주지 않고 main 함수가 종료된다.
 func main() {
 	fmt.Println("Hello World")
-	go myFunc()
+	var waitgroup sync.WaitGroup
+	// set the number of goroutines
+	waitgroup.Add(1)
+	go myFunc(&waitgroup)
+	// block the execution of our main() function until the goroutines in the waitgroup have successfully completed
+	waitgroup.Wait()
 	fmt.Println("Finish Execution")
 }
